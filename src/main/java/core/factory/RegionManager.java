@@ -1,4 +1,4 @@
-package core;
+package core.factory;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -19,5 +19,9 @@ public class RegionManager {
     private KeyGenerator keyGenerator;
 
     private Provider provider;
+
+    private int expirationTime;
+
+    private boolean autoUpdate;
 
 }

@@ -4,6 +4,8 @@ public enum CacheType {
 
     ConcurrentHashMap,
 
-    Redis;
+    Redis,
+
+    Custom
 
 }

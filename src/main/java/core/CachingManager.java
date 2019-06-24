@@ -1,25 +1,18 @@
 package core;
 
-import util.ConfigurationReader;
+import core.factory.CacheableObjectFactory;
 
-import java.util.List;
+class CachingManager implements CacheableObjectFactory {
 
-class CachingManager {
+    private final RegionProvider regionProvider;
 
-    static RegionProvider regionProvider;
-
-    static ConfigurationReader configurationReader = null;
-
-    static void setRegions(List<RegionManager> regions) {
-        regionProvider = new RegionProvider(regions);
+    CachingManager (RegionProvider regionProvider) {
+        this.regionProvider = regionProvider;
     }
 
-    static void setRegions(String configFile) {
-        setRegions(configurationReader.readConfiguration(configFile));
-    }
 
-    static <T> T newInstance (Class<T> clazz) {
+    @Override
+    public <T> T create(Class<T> clazz) {
         return null;
     }
-
 }

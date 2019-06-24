@@ -1,5 +1,6 @@
-package core;
+package core.factory;
 
+import core.CacheType;
 import exceptions.NonsupportCacheTypeException;
 import implementation.basic.BasicKeyGenerator;
 import implementation.basic.BasicProviderImpl;
@@ -17,12 +18,12 @@ public class RegionManagerFactory {
      * @param cacheType
      * @return
      */
-    public static RegionManager getManager (String regionName, @NonNull CacheType cacheType) {
+    public static RegionManager getManager (String regionName, @NonNull CacheType cacheType, int expirationTime, boolean autoUpdate) {
         switch (cacheType) {
             case ConcurrentHashMap:
-                return new RegionManager(regionName, new BasicKeyGenerator(), new BasicProviderImpl());
+                return new RegionManager(regionName, new BasicKeyGenerator(), new BasicProviderImpl(), expirationTime, autoUpdate);
             case Redis:
-                return new RegionManager(regionName, new BasicKeyGenerator(), new RedisProviderImpl());
+                return new RegionManager(regionName, new BasicKeyGenerator(), new RedisProviderImpl(), expirationTime, autoUpdate);
         }
         throw new NonsupportCacheTypeException("Cache type isn't support!");
     }

@@ -1,11 +1,12 @@
 package util;
 
-import core.RegionManager;
+import core.factory.RegionManager;
 
+import java.io.FileNotFoundException;
 import java.util.List;
 
 public interface ConfigurationReader {
 
-    List<RegionManager> readConfiguration (String path);
+    List<RegionManager> readConfiguration (String path) throws FileNotFoundException;
 
 }

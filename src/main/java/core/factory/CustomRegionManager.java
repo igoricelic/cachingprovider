@@ -1,4 +1,4 @@
-package core;
+package core.factory;
 
 import implementation.basic.BasicKeyGenerator;
 import implementation.basic.BasicProviderImpl;
@@ -11,7 +11,7 @@ import specification.Provider;
 public final class CustomRegionManager extends RegionManager {
 
     CustomRegionManager(String regionName) {
-        super(regionName, new BasicKeyGenerator(), new BasicProviderImpl());
+        super(regionName, new BasicKeyGenerator(), new BasicProviderImpl(), -1, false);
     }
 
     @Override
@@ -24,4 +24,9 @@ public final class CustomRegionManager extends RegionManager {
         super.setProvider(provider);
     }
 
+    @Override
+    public void setExpirationTime(int expirationTime) { super.setExpirationTime(expirationTime); }
+
+    @Override
+    public void setAutoUpdate(boolean autoUpdate) { super.setAutoUpdate(autoUpdate); }
 }

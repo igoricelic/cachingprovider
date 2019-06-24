@@ -1,5 +1,8 @@
 package core;
 
+import core.factory.RegionManager;
+
+import java.io.FileNotFoundException;
 import java.util.List;
 
 /**
@@ -7,16 +10,12 @@ import java.util.List;
  */
 public class CachingRegistry {
 
-    public static void setRegions(List<RegionManager> regions) {
-        CachingManager.setRegions(regions);
+    public static CachingManager of (List<RegionManager> regions) {
+        return new CachingManager(new RegionProvider(regions));
     }
 
-    public static void setRegions(String configFile) {
-        CachingManager.setRegions(configFile);
-    }
-
-    public static <T> T newInstance (Class<T> clazz) {
-        return CachingManager.newInstance(clazz);
+    public static CachingManager of (String configurationFilePath) throws FileNotFoundException {
+        return new CachingManager(new RegionProvider(configurationFilePath));
     }
 
 }
