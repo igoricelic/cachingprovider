@@ -27,7 +27,7 @@ public class SimpleTest1 {
 //            new RegionManager("", null, null);
 //            new ConcurrentHashMap<>()
 
-            RegionManagerFactory.getManager("n", null);
+//            RegionManagerFactory.getManager("n", null);
             User r1 = objectMapper.readValue(jedis.get("u1"), User.class);
             System.out.println(r1.toString());
             User r2 = objectMapper.readValue(jedis.get("u2"), User.class);
