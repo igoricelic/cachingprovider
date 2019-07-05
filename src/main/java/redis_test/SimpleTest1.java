@@ -1,6 +1,5 @@
-package redis;
+package redis_test;
 
-import core.factory.RegionManagerFactory;
 import org.codehaus.jackson.map.ObjectMapper;
 import redis.clients.jedis.Jedis;
 

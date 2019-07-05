@@ -26,9 +26,10 @@ public class ConfigurationReaderImpl implements ConfigurationReader {
             prop.load(input);
 
             Set<String> regionNames = prop.getAllRegions();
+            regionNames.forEach(regionName -> getManagerByProperty(regionName, prop.getRegionData(regionName)));
 
-            return regionNames.stream().map(regionName -> getManagerByProperty(regionName, prop.getRegionData(regionName)))
-                    .collect(Collectors.toList());
+//            return regionNames.stream().map(regionName -> getManagerByProperty(regionName, prop.getRegionData(regionName)))
+//                    .collect(Collectors.toList());
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -36,8 +37,20 @@ public class ConfigurationReaderImpl implements ConfigurationReader {
     }
 
     private RegionManager getManagerByProperty (String regionName, Map<String, Object> property) {
-
+        System.out.println("=======================");
+        System.out.println(regionName);
+        System.out.println(property.toString());
+        System.out.println("=======================");
         return null;
+    }
+
+    public static void main(String[] args) {
+        ConfigurationReaderImpl reader = new ConfigurationReaderImpl();
+        try {
+            reader.readConfiguration("/Users/igoricelic/Documents/workspace-spring-tool-suite-4-4.1.0.RELEASE/ott_repositories/cachingprovider/src/main/java/test/simple.properties");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
 }

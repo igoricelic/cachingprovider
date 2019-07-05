@@ -1,4 +1,4 @@
-package redis;
+package redis_test;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

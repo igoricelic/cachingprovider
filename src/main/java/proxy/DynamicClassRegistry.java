@@ -1,10 +1,8 @@
 package proxy;
 
 import javassist.util.proxy.ProxyFactory;
-import redis.Service;
 
 import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class DynamicClassRegistry {
