@@ -1,4 +1,4 @@
-package redis_test;
+package test.redis_test;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import redis.clients.jedis.Jedis;

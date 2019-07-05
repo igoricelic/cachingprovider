@@ -1,4 +1,4 @@
-package redis_test;
+package test.redis_test;
 
 public class Service {
 

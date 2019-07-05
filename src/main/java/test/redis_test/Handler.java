@@ -1,4 +1,4 @@
-package redis_test;
+package test.redis_test;
 
 import javassist.util.proxy.MethodHandler;
 

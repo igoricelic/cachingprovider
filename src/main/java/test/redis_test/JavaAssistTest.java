@@ -1,4 +1,4 @@
-package redis_test;
+package test.redis_test;
 
 import javassist.util.proxy.ProxyFactory;
 import javassist.util.proxy.ProxyObject;

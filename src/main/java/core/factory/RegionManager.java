@@ -1,15 +1,13 @@
 package core.factory;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import specification.KeyGenerator;
 import specification.Provider;
 
 /**
  *
  */
+@ToString
 @Getter @Setter(value = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
 public class RegionManager {

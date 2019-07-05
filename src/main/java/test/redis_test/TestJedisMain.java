@@ -1,13 +1,13 @@
-package redis_test;
+package test.redis_test;
 
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.*;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class TestJedisMain {
-
     static boolean isEven(double num) { return ((num % 2) == 0); }
 
     public static void main(String[] args) {
@@ -20,32 +20,34 @@ public class TestJedisMain {
                 "avgust", "septembar", "oktobar", "novembar", "decembar");
 
         var runnables = IntStream.rangeClosed(1, 10).boxed()
-                .map(value -> new Worker(testJedis, KEYS, value, isEven(value))).collect(Collectors.toList());
+                .map(value -> new Worker(queue, KEYS, value, isEven(value))).collect(Collectors.toList());
 
         ExecutorService executorService = Executors.newFixedThreadPool(10);
         runnables.forEach(executorService::submit);
 
         try {
-            Thread.sleep(15000);
+            Thread.sleep(5000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-        executorService.shutdown();
+        executorService.shutdownNow();
     }
 
 }
 
 class Worker implements Runnable {
 
-    private TestJedis testJedis;
+    private Logger logger = Logger.getLogger("JedisLogger");
+
+    private BlockingQueue<TestJedis> queue;
     private List<String> KEYS;
     private Random random;
     private int id;
     private boolean isReader;
 
-    public Worker(TestJedis testJedis, List<String> KEYS, int id, boolean isReader) {
-        this.testJedis = testJedis;
+    public Worker(BlockingQueue<TestJedis> queue, List<String> KEYS, int id, boolean isReader) {
+        this.queue = queue;
         this.KEYS = KEYS;
         this.id = id;
         this.random = ThreadLocalRandom.current();
@@ -55,17 +57,21 @@ class Worker implements Runnable {
     @Override
     public void run() {
         while(true) {
-            String key = KEYS.get(random.nextInt(KEYS.size()));
-            if(isReader)
-                testJedis.read(key, id);
-            else
-                testJedis.write(key, String.valueOf(random.nextLong()), id);
             try {
-                Thread.sleep(200);
+                var testJedis = queue.take();
+                logger.info("Queue size: "+queue.size());
+                String key = KEYS.get(random.nextInt(KEYS.size()));
+                if(isReader)
+                    testJedis.read(key, id);
+                else
+                    testJedis.write(key, String.valueOf(random.nextLong()), id);
+                queue.put(testJedis);
+                Thread.sleep(500);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                break;
             }
         }
+        System.out.println("Zavrsavam se");
     }
 }
 
