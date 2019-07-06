@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class RegionProvider {
+class RegionProvider {
 
     private Map<String, RegionManager> regions;
 

@@ -16,7 +16,6 @@ public final class BasicProviderImpl implements Provider {
         this.dataGrid = new ConcurrentHashMap<>();
     }
 
-
     @Override
     public <T> void set(String key, T value) {
         dataGrid.put(key, value);

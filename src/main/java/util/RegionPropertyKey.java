@@ -14,7 +14,9 @@ public enum RegionPropertyKey {
 
     redis_host ("localhost"),
 
-    redis_port ("6379"),
+    redis_port (6379),
+
+    redis_connections (5),
 
     expiration_time (0),
 
@@ -22,8 +24,8 @@ public enum RegionPropertyKey {
 
     public final Object defaultValue;
 
-    RegionPropertyKey(Object label) {
-        this.defaultValue = label;
+    RegionPropertyKey(Object defaultValue) {
+        this.defaultValue = defaultValue;
     }
 
 }

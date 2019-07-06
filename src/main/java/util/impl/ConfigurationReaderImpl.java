@@ -3,6 +3,7 @@ package util.impl;
 import core.CacheType;
 import core.factory.RegionManager;
 import core.factory.RegionManagerFactory;
+import implementation.redis.RedisConfig;
 import specification.KeyGenerator;
 import specification.Provider;
 import util.ConfigurationReader;
@@ -60,12 +61,31 @@ public class ConfigurationReaderImpl implements ConfigurationReader {
         if(property.containsKey(RegionPropertyKey.auto_update.toString())) {
             autoUpdate = Boolean.parseBoolean(property.get(RegionPropertyKey.auto_update.toString()).toString());
         }
+        RedisConfig config = new RedisConfig();
+        if(property.containsKey(RegionPropertyKey.redis_host.toString())) {
+            config.setHost(property.get(RegionPropertyKey.redis_host.toString()).toString());
+        }
+        if(property.containsKey(RegionPropertyKey.redis_port.toString())) {
+            try {
+                config.setPort(Integer.parseInt(property.get(RegionPropertyKey.redis_port.toString()).toString()));
+            } catch (NumberFormatException e) {
+                // TODO: Exception
+            }
+        }
+        if(property.containsKey(RegionPropertyKey.redis_connections.toString())) {
+            try {
+                config.setTotalConnections(Integer.parseInt(property.get(RegionPropertyKey.redis_connections.toString()).toString()));
+            } catch (NumberFormatException e) {
+                // TODO: Exception
+            }
+        }
         if(cacheType == CacheType.Custom) {
             var customRegion = RegionManagerFactory.getCustomManager(regionName);
             KeyGenerator keyGenerator = (KeyGenerator) RegionPropertyKey.key_generator.defaultValue;
             if(property.containsKey(RegionPropertyKey.key_generator.toString())) {
                 try {
-                    keyGenerator = (KeyGenerator) Class.forName(property.get(RegionPropertyKey.key_generator.toString()).toString()).getConstructor().newInstance();
+                    keyGenerator = (KeyGenerator) Class.forName(property
+                            .get(RegionPropertyKey.key_generator.toString()).toString()).getConstructor().newInstance();
                 } catch (InstantiationException | IllegalAccessException
                         | ClassNotFoundException | NoSuchMethodException | InvocationTargetException e) {
                     e.printStackTrace();
@@ -75,7 +95,8 @@ public class ConfigurationReaderImpl implements ConfigurationReader {
             Provider provider = (Provider) RegionPropertyKey.provider.defaultValue;
             if(property.containsKey(RegionPropertyKey.provider.toString())) {
                 try {
-                    provider = (Provider) Class.forName(property.get(RegionPropertyKey.provider.toString()).toString()).getConstructor().newInstance();
+                    provider = (Provider) Class.forName(property
+                            .get(RegionPropertyKey.provider.toString()).toString()).getConstructor().newInstance();
                 } catch (InstantiationException | IllegalAccessException
                         | ClassNotFoundException | NoSuchMethodException | InvocationTargetException e) {
                     e.printStackTrace();
@@ -84,8 +105,9 @@ public class ConfigurationReaderImpl implements ConfigurationReader {
             }
             customRegion.setProvider(provider);
             customRegion.setKeyGenerator(keyGenerator);
+            return customRegion;
         }
-        return RegionManagerFactory.getManager(regionName, cacheType, expirationTime, autoUpdate);
+        return RegionManagerFactory.getManager(regionName, cacheType, config, expirationTime, autoUpdate);
     }
 
 }
