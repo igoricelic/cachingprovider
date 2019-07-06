@@ -1,6 +1,8 @@
 package core;
 
 import core.factory.RegionManager;
+import specification.KeyGenerator;
+import specification.Provider;
 import util.ConfigurationReader;
 import util.impl.ConfigurationReaderImpl;
 
@@ -10,7 +12,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-class RegionProvider {
+public class RegionProvider {
 
     private Map<String, RegionManager> regions;
 
@@ -25,8 +27,12 @@ class RegionProvider {
     }
 
 
-    public RegionManager getRegion (String regionName) {
-        return regions.get(regionName);
+    public Provider getProvider (String regionName) {
+        return regions.get(regionName).getProvider();
+    }
+
+    public KeyGenerator getKeyGenerator(String regionName) {
+        return regions.get(regionName).getKeyGenerator();
     }
 
     public boolean existRegion (String regionName) {
