@@ -15,7 +15,7 @@ public class CachingManager implements CacheableObjectFactory {
 
     CachingManager (RegionProvider regionProvider) {
         this.regionProvider = regionProvider;
-        this.dynamicClassRegistry = new DynamicClassRegistry();
+        this.dynamicClassRegistry = new DynamicClassRegistry(regionProvider);
     }
 
     @Override
@@ -23,7 +23,6 @@ public class CachingManager implements CacheableObjectFactory {
         var constructor = dynamicClassRegistry.getDynamicConstuctor(clazz);
         try {
             T instance = (T) constructor.newInstance();
-            // TODO: Validacije instance, regioni i sl...
             ((ProxyObject) instance).setHandler(new DynamicAdvice(regionProvider));
             return instance;
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
