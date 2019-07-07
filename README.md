@@ -33,10 +33,6 @@ boolean contains (String key);
 The library offers two implementations of provider. Data can be stored in project ram memory (ConcurrentHashMap) or
 in Redis (in memory database). For custom implementation, we can implement provider interface and define custom region.
 
-Apart from the data provider, the region also describes the following attributes:
-
-### KeyGenerator
-
 ## Setup
 
 Before usage, we must define our cache regions. We have a two way:
