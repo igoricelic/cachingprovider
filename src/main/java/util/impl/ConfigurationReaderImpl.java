@@ -1,13 +1,13 @@
 package util.impl;
 
-import core.CacheType;
-import core.factory.RegionManager;
-import core.factory.RegionManagerFactory;
-import implementation.redis.RedisConfig;
+import model.enums.CacheType;
+import model.RegionManager;
+import factory.RegionManagerFactory;
+import specification.impl.redis.RedisConfig;
 import specification.KeyGenerator;
 import specification.Provider;
 import util.ConfigurationReader;
-import util.RegionPropertyKey;
+import model.enums.RegionProperties;
 
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
@@ -41,66 +41,66 @@ public class ConfigurationReaderImpl implements ConfigurationReader {
     }
 
     private RegionManager getManagerByProperty (String regionName, Map<String, Object> property) {
-        if(property.containsKey(RegionPropertyKey.default_config.toString()))
-            if(Boolean.parseBoolean(property.get(RegionPropertyKey.default_config.toString()).toString()))
-                return RegionManagerFactory.getManager(regionName, (CacheType) RegionPropertyKey.cache_type.defaultValue, new RedisConfig(),
-                                (int) RegionPropertyKey.expiration_time.defaultValue, (boolean) RegionPropertyKey.auto_update.defaultValue);
-        CacheType cacheType = (CacheType) RegionPropertyKey.cache_type.defaultValue;
-        if(property.containsKey(RegionPropertyKey.cache_type.toString())) {
+        if(property.containsKey(RegionProperties.default_config.toString()))
+            if(Boolean.parseBoolean(property.get(RegionProperties.default_config.toString()).toString()))
+                return RegionManagerFactory.getManager(regionName, (CacheType) RegionProperties.cache_type.defaultValue, new RedisConfig(),
+                                (int) RegionProperties.expiration_time.defaultValue, (boolean) RegionProperties.auto_update.defaultValue);
+        CacheType cacheType = (CacheType) RegionProperties.cache_type.defaultValue;
+        if(property.containsKey(RegionProperties.cache_type.toString())) {
             try {
-                cacheType = CacheType.valueOf(property.get(RegionPropertyKey.cache_type.toString()).toString());
+                cacheType = CacheType.valueOf(property.get(RegionProperties.cache_type.toString()).toString());
             } catch (IllegalArgumentException e) {
                 // TODO: Exception
             }
         }
-        int expirationTime = (int) RegionPropertyKey.expiration_time.defaultValue;
-        if(property.containsKey(RegionPropertyKey.cache_type.toString())) {
+        int expirationTime = (int) RegionProperties.expiration_time.defaultValue;
+        if(property.containsKey(RegionProperties.cache_type.toString())) {
             try {
-                expirationTime = Integer.parseInt(property.get(RegionPropertyKey.cache_type.toString()).toString());
+                expirationTime = Integer.parseInt(property.get(RegionProperties.cache_type.toString()).toString());
             } catch (NumberFormatException e) {
                 // TODO: Exception
             }
         }
-        boolean autoUpdate = (boolean) RegionPropertyKey.auto_update.defaultValue;
-        if(property.containsKey(RegionPropertyKey.auto_update.toString())) {
-            autoUpdate = Boolean.parseBoolean(property.get(RegionPropertyKey.auto_update.toString()).toString());
+        boolean autoUpdate = (boolean) RegionProperties.auto_update.defaultValue;
+        if(property.containsKey(RegionProperties.auto_update.toString())) {
+            autoUpdate = Boolean.parseBoolean(property.get(RegionProperties.auto_update.toString()).toString());
         }
         RedisConfig config = new RedisConfig();
-        if(property.containsKey(RegionPropertyKey.redis_host.toString())) {
-            config.setHost(property.get(RegionPropertyKey.redis_host.toString()).toString());
+        if(property.containsKey(RegionProperties.redis_host.toString())) {
+            config.setHost(property.get(RegionProperties.redis_host.toString()).toString());
         }
-        if(property.containsKey(RegionPropertyKey.redis_port.toString())) {
+        if(property.containsKey(RegionProperties.redis_port.toString())) {
             try {
-                config.setPort(Integer.parseInt(property.get(RegionPropertyKey.redis_port.toString()).toString()));
+                config.setPort(Integer.parseInt(property.get(RegionProperties.redis_port.toString()).toString()));
             } catch (NumberFormatException e) {
                 // TODO: Exception
             }
         }
-        if(property.containsKey(RegionPropertyKey.redis_connections.toString())) {
+        if(property.containsKey(RegionProperties.redis_connections.toString())) {
             try {
-                config.setTotalConnections(Integer.parseInt(property.get(RegionPropertyKey.redis_connections.toString()).toString()));
+                config.setTotalConnections(Integer.parseInt(property.get(RegionProperties.redis_connections.toString()).toString()));
             } catch (NumberFormatException e) {
                 // TODO: Exception
             }
         }
         if(cacheType == CacheType.Custom) {
             var customRegion = RegionManagerFactory.getCustomManager(regionName);
-            KeyGenerator keyGenerator = (KeyGenerator) RegionPropertyKey.key_generator.defaultValue;
-            if(property.containsKey(RegionPropertyKey.key_generator.toString())) {
+            KeyGenerator keyGenerator = (KeyGenerator) RegionProperties.key_generator.defaultValue;
+            if(property.containsKey(RegionProperties.key_generator.toString())) {
                 try {
                     keyGenerator = (KeyGenerator) Class.forName(property
-                            .get(RegionPropertyKey.key_generator.toString()).toString()).getConstructor().newInstance();
+                            .get(RegionProperties.key_generator.toString()).toString()).getConstructor().newInstance();
                 } catch (InstantiationException | IllegalAccessException
                         | ClassNotFoundException | NoSuchMethodException | InvocationTargetException e) {
                     e.printStackTrace();
                     // TODO: Exception
                 }
             }
-            Provider provider = (Provider) RegionPropertyKey.provider.defaultValue;
-            if(property.containsKey(RegionPropertyKey.provider.toString())) {
+            Provider provider = (Provider) RegionProperties.provider.defaultValue;
+            if(property.containsKey(RegionProperties.provider.toString())) {
                 try {
                     provider = (Provider) Class.forName(property
-                            .get(RegionPropertyKey.provider.toString()).toString()).getConstructor().newInstance();
+                            .get(RegionProperties.provider.toString()).toString()).getConstructor().newInstance();
                 } catch (InstantiationException | IllegalAccessException
                         | ClassNotFoundException | NoSuchMethodException | InvocationTargetException e) {
                     e.printStackTrace();

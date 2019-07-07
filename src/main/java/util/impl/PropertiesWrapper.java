@@ -20,6 +20,6 @@ final class PropertiesWrapper extends Properties implements PropertiesIntegratio
     public Map<String, Object> getRegionData(String region) {
         Set<String> keys = keySet().stream().filter(key -> key.toString().startsWith(region))
                 .map(String::valueOf).collect(Collectors.toSet());
-        return keys.stream().collect(Collectors.toMap(key -> key.split(DOT)[1], key -> get(key)));
+        return keys.stream().collect(Collectors.toMap(key -> key.split(DOT)[1], super::get));
     }
 }

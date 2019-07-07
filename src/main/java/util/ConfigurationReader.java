@@ -1,6 +1,6 @@
 package util;
 
-import core.factory.RegionManager;
+import model.RegionManager;
 
 import java.io.FileNotFoundException;
 import java.util.List;
