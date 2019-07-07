@@ -2,6 +2,7 @@ package implementation.basic;
 
 import specification.Provider;
 
+import java.io.Serializable;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -17,12 +18,12 @@ public final class BasicProviderImpl implements Provider {
     }
 
     @Override
-    public <T> void set(String key, T value) {
+    public <T extends Serializable> void set(String key, T value) {
         dataGrid.put(key, value);
     }
 
     @Override
-    public <T> T get(String key, Class<T> clazz) {
+    public <T extends Serializable> T get(String key, Class<T> clazz) {
         return clazz.cast(dataGrid.get(key));
     }
 

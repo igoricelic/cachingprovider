@@ -1,10 +1,12 @@
 package implementation.redis;
 
-import org.codehaus.jackson.map.ObjectMapper;
 import redis.clients.jedis.Jedis;
 import specification.Provider;
+import util.ObjectSerializeProvider;
+import util.impl.ByteSerialization;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.concurrent.BlockingQueue;
 
 /**
@@ -12,21 +14,20 @@ import java.util.concurrent.BlockingQueue;
  */
 public final class RedisProviderImpl implements Provider {
 
-    private BlockingQueue<Jedis> connectionPool;
+    private final BlockingQueue<Jedis> connectionPool;
 
-    private ObjectMapper objectMapper;
+    private final ObjectSerializeProvider objectSerializeProvider;
 
     public RedisProviderImpl(RedisConfig config) {
-        this.objectMapper = new ObjectMapper();
+        this.objectSerializeProvider = new ByteSerialization();
         this.connectionPool = JedisConnectionProvider.getPool(config);
     }
 
-
     @Override
-    public <T> void set(String key, T value) {
+    public <T extends Serializable> void set(String key, T value) {
         try {
             var connection = connectionPool.take();
-            String valueAsString = objectMapper.writeValueAsString(value);
+            String valueAsString = objectSerializeProvider.toString(value);
             connection.set(key, valueAsString);
             connectionPool.put(connection);
         } catch (IOException | InterruptedException e) {
@@ -35,12 +36,12 @@ public final class RedisProviderImpl implements Provider {
     }
 
     @Override
-    public <T> T get(String key, Class<T> clazz) {
+    public <T extends Serializable> T get(String key, Class<T> clazz) {
         try {
             var connection = connectionPool.take();
             String valueAsString = connection.get(key);
             connectionPool.put(connection);
-            return objectMapper.readValue(valueAsString, clazz);
+            return objectSerializeProvider.toObject(valueAsString, clazz);
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }

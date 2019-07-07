@@ -41,6 +41,10 @@ public class ConfigurationReaderImpl implements ConfigurationReader {
     }
 
     private RegionManager getManagerByProperty (String regionName, Map<String, Object> property) {
+        if(property.containsKey(RegionPropertyKey.default_config.toString()))
+            if(Boolean.parseBoolean(property.get(RegionPropertyKey.default_config.toString()).toString()))
+                return RegionManagerFactory.getManager(regionName, (CacheType) RegionPropertyKey.cache_type.defaultValue, new RedisConfig(),
+                                (int) RegionPropertyKey.expiration_time.defaultValue, (boolean) RegionPropertyKey.auto_update.defaultValue);
         CacheType cacheType = (CacheType) RegionPropertyKey.cache_type.defaultValue;
         if(property.containsKey(RegionPropertyKey.cache_type.toString())) {
             try {

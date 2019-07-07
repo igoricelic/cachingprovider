@@ -5,6 +5,7 @@ import core.RegionProvider;
 import javassist.util.proxy.MethodHandler;
 import lombok.AllArgsConstructor;
 
+import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.Optional;
 
@@ -24,13 +25,16 @@ public class DynamicAdvice implements MethodHandler {
         for(String regionName: cacheable.regions()) {
             var provider = regionProvider.getProvider(regionName);
             var key = regionProvider.getKeyGenerator(regionName).generateKey(proceed, args);
-            if(provider.contains(key)) return provider.get(key, proceed.getReturnType());
+            if(provider.contains(key)) {
+                System.out.println("Pronadjen u regionu: "+regionName);
+                return provider.get(key, (Class<? extends Serializable>) proceed.getReturnType());
+            }
         }
         var result = proceed.invoke(self, args);
         for(String regionName: cacheable.regions()) {
             var provider = regionProvider.getProvider(regionName);
             var key = regionProvider.getKeyGenerator(regionName).generateKey(proceed, args);
-            provider.set(key, result);
+            provider.set(key, Serializable.class.cast(result));
         }
         return result;
     }

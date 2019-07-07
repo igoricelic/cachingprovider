@@ -6,6 +6,8 @@ import implementation.basic.BasicProviderImpl;
 
 public enum RegionPropertyKey {
 
+    default_config (false),
+
     key_generator (new BasicKeyGenerator()),
 
     provider (new BasicProviderImpl()),
