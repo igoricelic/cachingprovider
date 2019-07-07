@@ -22,28 +22,25 @@ public class DynamicAdvice implements MethodHandler {
         Optional<Cacheable> optionalCacheable = Optional.ofNullable(thisMethod.getAnnotation(Cacheable.class));
         if(optionalCacheable.isEmpty()) return proceed.invoke(self, args);
         Cacheable cacheable = optionalCacheable.get();
-        for(String regionName: cacheable.regions()) {
-            var provider = regionProvider.getProvider(regionName);
-            var key = regionProvider.getKeyGenerator(regionName).generate(proceed, args);
-            if(provider.contains(key)) {
-                System.out.println("Pronadjen u regionu: "+regionName);
-                return provider.get(key, (Class<? extends Serializable>) proceed.getReturnType());
-            }
-        }
+        var cacheResult = processing(cacheable.regions(), proceed, args, true, Optional.empty());
+        if(cacheResult.isPresent()) return cacheResult.get();
         var result = proceed.invoke(self, args);
-        for(String regionName: cacheable.regions()) {
-            var provider = regionProvider.getProvider(regionName);
-            var key = regionProvider.getKeyGenerator(regionName).generate(proceed, args);
-            provider.set(key, Serializable.class.cast(result));
-        }
+        processing(cacheable.regions(), proceed, args, false, Optional.of(result));
         return result;
     }
 
-//    private void processing(String[] regions, Object self, Method proceed, Object[] args) {
-//        for(String regionName: regions) {
-//            var provider = regionProvider.getProvider(regionName);
-//            var key = regionProvider.getKeyGenerator(regionName).generate(proceed, args);
-//        }
-//    }
+    private Optional<Object> processing(String[] regions, Method method, Object[] args, boolean stateCheck, Optional<Object> result) {
+        for(String regionName: regions) {
+            var provider = regionProvider.getProvider(regionName);
+            var key = regionProvider.getKeyGenerator(regionName).generate(method, args);
+            if(stateCheck && provider.contains(key)) {
+                System.out.println("Pronadjen u regionu: "+regionName);
+                return Optional.ofNullable(provider.get(key, (Class<? extends Serializable>) method.getReturnType()));
+            } else {
+                provider.set(key, Serializable.class.cast(result.get()));
+            }
+        }
+        return result;
+    }
 
 }

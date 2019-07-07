@@ -23,13 +23,6 @@ public class RegionProvider {
         this.regions = listOfRegions.stream().collect(Collectors.toMap(RegionManager::getRegionName, Function.identity()));
     }
 
-    RegionProvider(String configFilePath) throws FileNotFoundException {
-        ConfigurationReader configurationReader = new ConfigurationReaderImpl();
-        this.regions = configurationReader.readConfiguration(configFilePath).stream()
-                .collect(Collectors.toMap(RegionManager::getRegionName, Function.identity()));
-    }
-
-
     public Provider getProvider (String regionName) {
         return regions.get(regionName).getProvider();
     }
