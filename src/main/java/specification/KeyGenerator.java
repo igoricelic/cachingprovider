@@ -7,6 +7,6 @@ import java.lang.reflect.Method;
  */
 public interface KeyGenerator {
 
-    String generateKey (Method method, Object[] args);
+    String generate(Method method, Object[] args);
 
 }

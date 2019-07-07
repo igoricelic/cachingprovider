@@ -2,25 +2,27 @@ package core;
 
 import core.factory.CacheableObjectFactory;
 import javassist.util.proxy.ProxyObject;
+import proxy.ClassRegistry;
 import proxy.DynamicAdvice;
-import proxy.DynamicClassRegistry;
+import proxy.DynamicClassProvider;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
 public class CachingManager implements CacheableObjectFactory {
 
     private final RegionProvider regionProvider;
 
-    private final DynamicClassRegistry dynamicClassRegistry;
+    private final ClassRegistry classRegistry;
 
     CachingManager (RegionProvider regionProvider) {
         this.regionProvider = regionProvider;
-        this.dynamicClassRegistry = new DynamicClassRegistry(regionProvider);
+        this.classRegistry = new DynamicClassProvider();
     }
 
     @Override
     public <T> T create(Class<T> clazz) {
-        var constructor = dynamicClassRegistry.getDynamicConstuctor(clazz);
+        var constructor = getDefaultInitializer(clazz);
         try {
             T instance = (T) constructor.newInstance();
             ((ProxyObject) instance).setHandler(new DynamicAdvice(regionProvider));
@@ -30,4 +32,13 @@ public class CachingManager implements CacheableObjectFactory {
         }
         return null;
     }
+
+    private <T> Constructor<?> getDefaultInitializer(Class<T> clazz) {
+        if(!classRegistry.contains(clazz)) {
+            regionProvider.validate(clazz);
+            classRegistry.createChildClass(clazz);
+        }
+        return classRegistry.getDefaultInitializer(clazz);
+    }
+
 }

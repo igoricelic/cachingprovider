@@ -24,7 +24,7 @@ public class DynamicAdvice implements MethodHandler {
         Cacheable cacheable = optionalCacheable.get();
         for(String regionName: cacheable.regions()) {
             var provider = regionProvider.getProvider(regionName);
-            var key = regionProvider.getKeyGenerator(regionName).generateKey(proceed, args);
+            var key = regionProvider.getKeyGenerator(regionName).generate(proceed, args);
             if(provider.contains(key)) {
                 System.out.println("Pronadjen u regionu: "+regionName);
                 return provider.get(key, (Class<? extends Serializable>) proceed.getReturnType());
@@ -33,7 +33,7 @@ public class DynamicAdvice implements MethodHandler {
         var result = proceed.invoke(self, args);
         for(String regionName: cacheable.regions()) {
             var provider = regionProvider.getProvider(regionName);
-            var key = regionProvider.getKeyGenerator(regionName).generateKey(proceed, args);
+            var key = regionProvider.getKeyGenerator(regionName).generate(proceed, args);
             provider.set(key, Serializable.class.cast(result));
         }
         return result;
@@ -42,7 +42,7 @@ public class DynamicAdvice implements MethodHandler {
 //    private void processing(String[] regions, Object self, Method proceed, Object[] args) {
 //        for(String regionName: regions) {
 //            var provider = regionProvider.getProvider(regionName);
-//            var key = regionProvider.getKeyGenerator(regionName).generateKey(proceed, args);
+//            var key = regionProvider.getKeyGenerator(regionName).generate(proceed, args);
 //        }
 //    }
 
