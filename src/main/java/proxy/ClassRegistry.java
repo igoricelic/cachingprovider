@@ -2,6 +2,9 @@ package proxy;
 
 import java.lang.reflect.Constructor;
 
+/**
+ * @author igoricelic
+ */
 public interface ClassRegistry {
 
     <T> Constructor<?> getDefaultInitializer (Class<T> clazz);

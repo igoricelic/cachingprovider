@@ -9,6 +9,9 @@ import java.lang.reflect.Modifier;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * @author igoricelic
+ */
 public class DynamicClassProvider implements ClassRegistry {
 
     private Map<Class<?>, Constructor<?>> registry;

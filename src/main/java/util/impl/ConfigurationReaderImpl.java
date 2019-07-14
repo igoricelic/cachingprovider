@@ -1,13 +1,13 @@
 package util.impl;
 
-import model.enums.CacheType;
-import model.RegionManager;
-import factory.RegionManagerFactory;
-import specification.impl.redis.RedisConfig;
-import specification.KeyGenerator;
-import specification.Provider;
+import core.model.enums.CacheType;
+import core.model.RegionManager;
+import core.factory.RegionManagerFactory;
+import core.specification.impl.redis.RedisConfig;
+import core.specification.KeyGenerator;
+import core.specification.Provider;
 import util.ConfigurationReader;
-import model.enums.RegionProperties;
+import core.model.enums.RegionProperties;
 
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;

@@ -1,7 +1,7 @@
 package proxy.javassist;
 
-import model.annotations.Cacheable;
-import model.RegionProvider;
+import core.model.annotations.Cacheable;
+import core.model.RegionProvider;
 import javassist.util.proxy.MethodHandler;
 import lombok.AllArgsConstructor;
 
@@ -10,7 +10,7 @@ import java.lang.reflect.Method;
 import java.util.Optional;
 
 /**
- *
+ * @author igoricelic
  */
 @AllArgsConstructor
 public class DynamicAdvice implements MethodHandler {
