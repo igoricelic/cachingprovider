@@ -3,6 +3,7 @@ package model;
 import model.annotations.Cacheable;
 import specification.KeyGenerator;
 import specification.Provider;
+import util.impl.Exceptions;
 
 import java.lang.reflect.Method;
 import java.util.List;
@@ -27,18 +28,17 @@ public class RegionProvider {
         return regions.get(regionName).getKeyGenerator();
     }
 
-    public boolean validate(Class<?> clazz) {
+    void validate(Class<?> clazz) {
         for(Method method: clazz.getDeclaredMethods()) {
             Optional<Cacheable> optionalCacheable = Optional.ofNullable(method.getAnnotation(Cacheable.class));
             if(optionalCacheable.isPresent()) {
                 for(String regionName: optionalCacheable.get().regions()) {
                     if(!regions.containsKey(regionName)) {
-                        // TODO: Exception
+                        throw new Exceptions.InvalidRegionException(String.format("Invalid region! %s not found in region registry!", regionName));
                     }
                 }
             }
         }
-        return true;
     }
 
 }

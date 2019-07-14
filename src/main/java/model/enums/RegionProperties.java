@@ -1,6 +1,5 @@
 package model.enums;
 
-import model.enums.CacheType;
 import specification.impl.basic.BasicKeyGenerator;
 import specification.impl.basic.BasicProviderImpl;
 

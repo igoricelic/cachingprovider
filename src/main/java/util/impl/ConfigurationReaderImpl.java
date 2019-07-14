@@ -50,15 +50,15 @@ public class ConfigurationReaderImpl implements ConfigurationReader {
             try {
                 cacheType = CacheType.valueOf(property.get(RegionProperties.cache_type.toString()).toString());
             } catch (IllegalArgumentException e) {
-                // TODO: Exception
+                throw new Exceptions.InvalidPropertyParameterException("Inavalid format: Valid values are ConcurrentHashMap, Redis, Custom!");
             }
         }
         int expirationTime = (int) RegionProperties.expiration_time.defaultValue;
-        if(property.containsKey(RegionProperties.cache_type.toString())) {
+        if(property.containsKey(RegionProperties.expiration_time.toString())) {
             try {
                 expirationTime = Integer.parseInt(property.get(RegionProperties.cache_type.toString()).toString());
             } catch (NumberFormatException e) {
-                // TODO: Exception
+                throw new Exceptions.InvalidPropertyParameterException("Invalid format: ExpirationTime must be number!");
             }
         }
         boolean autoUpdate = (boolean) RegionProperties.auto_update.defaultValue;
@@ -73,14 +73,14 @@ public class ConfigurationReaderImpl implements ConfigurationReader {
             try {
                 config.setPort(Integer.parseInt(property.get(RegionProperties.redis_port.toString()).toString()));
             } catch (NumberFormatException e) {
-                // TODO: Exception
+                throw new Exceptions.InvalidPropertyParameterException("Invalid format: Port must be number!");
             }
         }
         if(property.containsKey(RegionProperties.redis_connections.toString())) {
             try {
                 config.setTotalConnections(Integer.parseInt(property.get(RegionProperties.redis_connections.toString()).toString()));
             } catch (NumberFormatException e) {
-                // TODO: Exception
+                throw new Exceptions.InvalidPropertyParameterException("Invalid format: redis_connections parameter must be number!");
             }
         }
         if(cacheType == CacheType.Custom) {
@@ -92,8 +92,7 @@ public class ConfigurationReaderImpl implements ConfigurationReader {
                             .get(RegionProperties.key_generator.toString()).toString()).getConstructor().newInstance();
                 } catch (InstantiationException | IllegalAccessException
                         | ClassNotFoundException | NoSuchMethodException | InvocationTargetException e) {
-                    e.printStackTrace();
-                    // TODO: Exception
+                    throw new Exceptions.InvalidPropertyParameterException("Invalid generator: Class not found!");
                 }
             }
             Provider provider = (Provider) RegionProperties.provider.defaultValue;
@@ -104,7 +103,7 @@ public class ConfigurationReaderImpl implements ConfigurationReader {
                 } catch (InstantiationException | IllegalAccessException
                         | ClassNotFoundException | NoSuchMethodException | InvocationTargetException e) {
                     e.printStackTrace();
-                    // TODO: Exception
+                    throw new Exceptions.InvalidPropertyParameterException("Invalid provider: Class not found!");
                 }
             }
             customRegion.setProvider(provider);

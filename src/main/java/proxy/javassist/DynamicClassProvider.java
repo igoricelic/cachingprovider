@@ -2,8 +2,10 @@ package proxy.javassist;
 
 import javassist.util.proxy.ProxyFactory;
 import proxy.ClassRegistry;
+import util.impl.Exceptions;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Modifier;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -22,13 +24,16 @@ public class DynamicClassProvider implements ClassRegistry {
 
     @Override
     public <T> Class<?> createChildClass(Class<T> clazz) {
+        if(Modifier.isFinal(clazz.getModifiers())) {
+            throw new Exceptions.InvalidModifierException("Class can't be final!");
+        }
         ProxyFactory proxyFactory = new ProxyFactory();
         proxyFactory.setSuperclass(clazz);
         var newClazz = proxyFactory.createClass();
         try {
             registry.put(clazz, newClazz.getConstructor());
         } catch (NoSuchMethodException e) {
-            e.printStackTrace();
+            throw new Exceptions.NoDefaultConstructorException(String.format("Error in class: %s: Not found default constructor!", clazz.getName()));
         }
         return newClazz;
     }

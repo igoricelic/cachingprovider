@@ -3,12 +3,12 @@ package factory;
 import model.enums.CacheType;
 import model.CustomRegionManager;
 import model.RegionManager;
-import model.exceptions.NonsupportCacheTypeException;
 import specification.impl.basic.BasicKeyGenerator;
 import specification.impl.basic.BasicProviderImpl;
 import specification.impl.redis.RedisConfig;
 import specification.impl.redis.RedisProviderImpl;
 import lombok.NonNull;
+import util.impl.Exceptions;
 
 /**
  *
@@ -28,7 +28,7 @@ public class RegionManagerFactory {
             case Redis:
                 return new RegionManager(regionName, new BasicKeyGenerator(), new RedisProviderImpl(redisConfig), expirationTime, autoUpdate);
         }
-        throw new NonsupportCacheTypeException("Cache type isn't support!");
+        throw new Exceptions.InvalidRegionException("Cache type isn't support!");
     }
 
     /**

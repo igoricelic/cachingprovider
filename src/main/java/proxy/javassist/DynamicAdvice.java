@@ -35,7 +35,6 @@ public class DynamicAdvice implements MethodHandler {
             var key = regionProvider.getKeyGenerator(regionName).generate(method, args);
             if(stateCheck) {
                 if(provider.contains(key)) {
-                    System.out.println("Pronadjen u regionu: "+regionName);
                     return Optional.ofNullable(provider.get(key, (Class<? extends Serializable>) method.getReturnType()));
                 }
             } else {
