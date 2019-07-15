@@ -1,7 +1,7 @@
 package core.specification.impl.redis;
 
+import core.specification.AbstractProvider;
 import redis.clients.jedis.Jedis;
-import core.specification.Provider;
 import core.specification.ObjectSerializeProvider;
 import core.specification.impl.ByteSerialization;
 
@@ -12,7 +12,7 @@ import java.util.concurrent.BlockingQueue;
 /**
  * @author igoricelic
  */
-public final class RedisProviderImpl implements Provider {
+public final class RedisProviderImpl extends AbstractProvider {
 
     private final BlockingQueue<Jedis> connectionPool;
 
@@ -59,5 +59,16 @@ public final class RedisProviderImpl implements Provider {
             e.printStackTrace();
         }
         return false;
+    }
+
+    @Override
+    public boolean clear(String key) {
+        try {
+            var connection = connectionPool.take();
+            connection.del(key);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return super.clear(key);
     }
 }

@@ -1,6 +1,6 @@
 package core.specification.impl.basic;
 
-import core.specification.Provider;
+import core.specification.AbstractProvider;
 import core.specification.ObjectSerializeProvider;
 import core.specification.impl.ByteSerialization;
 
@@ -12,7 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * @author igoricelic
  */
-public final class BasicProviderImpl implements Provider {
+public final class BasicProviderImpl extends AbstractProvider {
 
     private final Map<String, String> dataGrid;
 
@@ -49,4 +49,9 @@ public final class BasicProviderImpl implements Provider {
         return dataGrid.containsKey(key);
     }
 
+    @Override
+    public boolean clear(String key) {
+        dataGrid.remove(key);
+        return super.clear(key);
+    }
 }
