@@ -50,13 +50,13 @@ public class ConfigurationReaderImpl implements ConfigurationReader {
             try {
                 cacheType = CacheType.valueOf(property.get(RegionProperties.cache_type.toString()).toString());
             } catch (IllegalArgumentException e) {
-                throw new Exceptions.InvalidPropertyParameterException("Inavalid format: Valid values are ConcurrentHashMap, Redis, Custom!");
+                throw new Exceptions.InvalidPropertyParameterException("cache_type not found: Valid values are ConcurrentHashMap, Redis, Custom!");
             }
         }
         int expirationTime = (int) RegionProperties.expiration_time.defaultValue;
         if(property.containsKey(RegionProperties.expiration_time.toString())) {
             try {
-                expirationTime = Integer.parseInt(property.get(RegionProperties.cache_type.toString()).toString());
+                expirationTime = Integer.parseInt(property.get(RegionProperties.expiration_time.toString()).toString());
             } catch (NumberFormatException e) {
                 throw new Exceptions.InvalidPropertyParameterException("Invalid format: ExpirationTime must be number!");
             }

@@ -10,6 +10,6 @@ public interface ObjectSerializeProvider {
 
     String toString(Serializable serializableObject) throws IOException;
 
-    <T extends Serializable> T toObject(String valueAsString, Class<T> clazz) throws IOException;
+    <T> T toObject(String valueAsString, Class<T> clazz) throws IOException;
 
 }

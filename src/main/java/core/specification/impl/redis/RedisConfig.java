@@ -9,7 +9,7 @@ import core.model.enums.RegionProperties;
  * @author igoricelic
  */
 @AllArgsConstructor @NoArgsConstructor @Data
-public class RedisConfig {
+public final class RedisConfig {
 
     private String host = RegionProperties.redis_host.defaultValue.toString();
 

@@ -8,7 +8,7 @@ import java.util.Base64;
 /**
  * @author igoricelic
  */
-public class ByteSerialization implements ObjectSerializeProvider {
+public final class ByteSerialization implements ObjectSerializeProvider {
 
     @Override
     public String toString(Serializable serializableObject) throws IOException {
@@ -20,13 +20,13 @@ public class ByteSerialization implements ObjectSerializeProvider {
     }
 
     @Override
-    public <T extends Serializable> T toObject(String valueAsString, Class<T> clazz) throws IOException {
+    public <T> T toObject(String valueAsString, Class<T> clazz) throws IOException {
         try {
             byte [] data = Base64.getDecoder().decode(valueAsString);
             ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(data));
             ois.close();
             var result = ois.readObject();
-            return clazz.cast(result);
+            return (T) result;
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }

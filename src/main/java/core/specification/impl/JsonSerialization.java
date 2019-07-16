@@ -9,7 +9,7 @@ import java.io.Serializable;
 /**
  * @author igoricelic
  */
-public class JsonSerialization implements ObjectSerializeProvider {
+public final class JsonSerialization implements ObjectSerializeProvider {
 
     @Override
     public String toString(Serializable serializableObject) throws IOException {
@@ -18,7 +18,7 @@ public class JsonSerialization implements ObjectSerializeProvider {
     }
 
     @Override
-    public <T extends Serializable> T toObject(String valueAsString, Class<T> clazz) throws IOException {
+    public <T> T toObject(String valueAsString, Class<T> clazz) throws IOException {
         var objectMapper = new ObjectMapper();
         return objectMapper.readValue(valueAsString, clazz);
     }

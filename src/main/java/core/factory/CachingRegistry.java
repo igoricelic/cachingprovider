@@ -1,5 +1,6 @@
 package core.factory;
 
+import core.concurrency.impl.RegionWorkerProviderImpl;
 import core.model.CachingManager;
 import core.model.RegionManager;
 import core.model.RegionProvider;
@@ -15,7 +16,7 @@ import java.util.List;
 public class CachingRegistry {
 
     public static CachingManager of (List<RegionManager> regions) {
-        return new CachingManager(new RegionProvider(regions));
+        return new CachingManager(new RegionProvider(regions, new RegionWorkerProviderImpl()));
     }
 
     public static CachingManager of (String configurationFilePath) throws FileNotFoundException {

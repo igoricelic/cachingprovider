@@ -1,5 +1,6 @@
 package core.model;
 
+import core.concurrency.RegionWorkerProvider;
 import core.model.annotations.Cacheable;
 import core.specification.KeyGenerator;
 import core.specification.Provider;
@@ -19,7 +20,11 @@ public class RegionProvider {
 
     private Map<String, RegionManager> regions;
 
-    public RegionProvider(List<RegionManager> listOfRegions) {
+    public RegionProvider(List<RegionManager> listOfRegions, RegionWorkerProvider regionWorkerProvider) {
+        listOfRegions.forEach(regionManager -> {
+            if(regionManager.getExpirationTime() > 0)
+                regionWorkerProvider.submit(regionManager.isAutoUpdate(), regionManager.getExpirationTime(), regionManager.getProvider());
+        });
         this.regions = listOfRegions.stream().collect(Collectors.toMap(RegionManager::getRegionName, Function.identity()));
     }
 
